@@ -1,0 +1,231 @@
+/* === Réinitialisation globale – on part toujours d'une base propre === */
+*,
+*::before,
+*::after {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+    /* Peut-être pas indispensable partout, mais au moins on est tranquilles */
+}
+
+html,
+body {
+    height: 100%;  /* Nécessaire pour du plein écran */
+}
+
+/* === Variables de couleurs : pratique pour éviter les hex partout === */
+:root {
+    --bg-main: #05070c;
+    --border-soft: #1f2835;
+
+    /* Couleurs d'accent – ambiance HUD futuriste */
+    --accent-blue: #0ff0fc;
+    --accent-red: #ff2f4b;
+    --accent-purple: #b247ff;  /* peut servir pour signaler des erreurs */
+
+    --text-main: #f5f5f5;
+    --text-muted: #9aa0a6;
+}
+
+/* Style global du body – HUD sans scroll, en plein écran */
+body.hud-body {
+    width: 100vw;
+    height: 100vh;
+    overflow: hidden;  /* un HUD qui scrolle ? non merci */
+    background: radial-gradient(circle at top, #101522 0, #05070c 55%, #020308 100%);
+    color: var(--text-main);
+    font-family: "Orbitron", system-ui, sans-serif;
+    display: flex;
+    justify-content: center;
+    align-items: stretch;
+    /* Tout est centré, pour un look bien net */
+}
+
+/* === Grille principale du HUD : 5 rangées === */
+.hud-grid {
+    width: 100vw;
+    height: 100vh;
+    padding: 8px;  /* petite marge pour respirer un peu */
+    display: grid;
+    grid-template-rows: 8% 30% 6% 36% 14%;
+    gap: 8px;
+}
+
+/* Bandeau du haut */
+.hud-header {
+    border: 1px solid var(--border-soft);
+    padding: 6px 12px;
+    display: flex;
+    align-items: center;
+    background: linear-gradient(to right, #070b13, #05070c); /* très léger relief */
+}
+
+.hud-header-text {
+    font-size: 0.9rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+/* Deuxième rangée : dials, graphiques, mini-carte */
+.hud-top {
+    display: grid;
+    grid-template-columns: 1.1fr 1.1fr 1.6fr 0.9fr;
+    gap: 8px;
+}
+
+/* Style des cadrans (vitesse, carburant, etc.) */
+.dial {
+    border: 1px solid var(--border-soft);
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;  /* reste parfaitement rond */
+    position: relative;
+    background: #05070c;
+}
+
+/* Étiquette du cadran (en haut) */
+.dial-label {
+    position: absolute;
+    top: 10%;
+    width: 100%;
+    text-align: center;
+    font-size: 0.7rem;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+}
+
+/* Valeur centrale affichée (ex : 120 km/h) */
+.dial-value {
+    position: absolute;
+    top: 52%;  /* visuellement mieux que pile au centre */
+    width: 100%;
+    text-align: center;
+    font-size: 1.1rem;
+    font-weight: 600;
+    color: var(--accent-blue);
+}
+
+/* Aiguille du cadran */
+.dial-needle {
+    position: absolute;
+    bottom: 50%;
+    left: 50%;
+    width: 2px;
+    height: 35%;
+    background: var(--accent-red);  /* rouge = bien visible */
+    transform-origin: bottom center;
+    /* Peut-être qu'on ajoutera une anim plus tard ? */
+}
+
+/* Zone des graphiques */
+.top-graphs {
+    border: 1px solid var(--border-soft);
+    background: #060a11;  /* contraste légèrement avec les cadrans */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Les canvas remplissent bien leur conteneur */
+.top-graphs canvas,
+.hud-bottom-stats canvas {
+    width: 100%;
+    height: 100%;
+    /* pas de ratio fixe ici */
+}
+
+/* Mini-carte de navigation */
+.mini-map {
+    border: 1px solid var(--border-soft);
+    background: radial-gradient(circle at top, rgba(0, 255, 255, 0.1), #05070c);
+    position: relative;
+    overflow: hidden;
+    display: flex;
+    align-items: stretch;
+    justify-content: stretch;
+    mix-blend-mode: luminosity;  /* effet stylé, un peu expérimental */
+}
+
+/* Troisième rangée : bandeau de label */
+.hud-graphs-label {
+    border: 1px solid var(--border-soft);
+    display: flex;
+    align-items: center;
+    padding: 0 16px;
+    text-transform: uppercase;
+    letter-spacing: 0.16em;
+    font-size: 0.85rem;
+    background: #05070c;
+}
+
+/* Quatrième rangée : schéma du véhicule + diagnostics */
+.hud-middle {
+    display: grid;
+    grid-template-columns: 2fr 1.1fr;
+    gap: 8px;
+}
+
+/* Partie schéma du véhicule */
+.vehicle-schematic {
+    border: 1px solid var(--border-soft);
+    background: #060911;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    /* À remplacer par une SVG ou image */
+}
+
+/* Colonne droite : radar + 2 blocs */
+.right-column {
+    display: grid;
+    grid-template-rows: 2fr 1.1fr 1.1fr;
+    gap: 8px;
+}
+
+/* Radar de détection */
+.scan {
+    border: 1px solid var(--border-soft);
+    border-radius: 50%;
+    aspect-ratio: 1 / 1;
+    background: radial-gradient(circle, rgba(255, 47, 75, 0.3), #05070c);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Panneaux de diagnostic */
+.diagnostics {
+    border: 1px solid var(--border-soft);
+    background: #060a11;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    text-align: center;
+    font-size: 0.8rem;
+    color: var(--text-muted);
+}
+
+/* Dernière ligne : stats diverses */
+.hud-bottom-stats {
+    border: 1px solid var(--border-soft);
+    background: #05070c;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Style des textes de remplacement (placeholder) */
+.placeholder {
+    font-size: 0.8rem;
+    color: var(--text-muted);
+    text-align: center;
+    padding: 8px;
+}
+
+/* === Aide pour le débogage – affiche les bordures des blocs (à activer/désactiver) === */
+/*
+.hud-grid > * {
+    outline: 1px solid rgba(255, 255, 255, 0.2);  // utile en phase de test
+}
+*/

@@ -3,10 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Vehicle HUD Dashboard</title> <!-- titre un peu plus descriptif -->
+    
+    <!-- Bootstrap local + CDN de secours -->
     <link rel="stylesheet" href="./node_modules/bootstrap/dist/css/bootstrap.min.css">
     <link rel="stylesheet" href="./node_modules/bootstrap-icons/font/bootstrap-icons.css">
     <link rel="stylesheet" href="src/css/style.css">
+    
+    <!-- Polices et librairies externes -->
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;600&display=swap" rel="stylesheet">
+    <!-- On garde aussi Bootstrap via CDN, parfois plus rapide -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.css" rel="stylesheet" />
+    
+    <!-- Import maps pour utiliser les modules ES -->
     <script type="importmap">
         {
             "imports": {
@@ -15,12 +25,114 @@
                 "@kurkle/color": "./node_modules/@kurkle/color/dist/color.esm.js"
             }
         }
-    </script>        
+    </script>
+    
+    <!-- Chargement de nos modules personnalisés -->
     <script src="./src/js/animejs.js" type="module"></script>
     <script src="./src/js/chartjs.js" type="module"></script>
     <script src="./src/js/bootstrap.js" defer></script>
 </head>
-<body>
+
+<body class="hud-body">
+    <main class="hud-grid">
+    
+        <!-- Bandeau du haut avec infos du véhicule -->
+        <header class="hud-header">
+            <div class="hud-header-text">
+                Vehicle HUD – Mode: AUTONOMOUS <!-- TODO: rendre ce texte dynamique selon le mode réel -->
+            </div>
+            <!-- Bouton audio placé à droite -->
+            <button id="audio-toggle"
+                    type="button"
+                    class="btn btn-sm btn-outline-light ms-auto"
+                    data-bs-toggle="tooltip"
+                    data-bs-placement="bottom"
+                    title="Activer / couper l'ambiance sonore">
+                Audio
+            </button>
+        </header>
+    
+        <!-- Ligne principale : cadrans, graphique, carte -->
+        <section class="hud-top">
+            <!-- Cadran de vitesse (élément principal) -->
+            <div class="dial dial-speed">
+                <div class="dial-label">Speed</div>
+                <div class="dial-value" id="speed-value">0 km/h</div>
+                <div class="dial-needle speed-needle"></div>
+            </div>
+    
+            <!-- Cadran carburant/énergie -->
+            <div class="dial dial-energy">
+                <div class="dial-label">Fuel</div> <!-- simple pour l’instant, on pourrait changer pour “Energy” pour un véhicule électrique -->
+                <div class="dial-value" id="energy-value">100 %</div>
+                <div class="dial-needle energy-needle"></div>
+            </div>
+    
+            <!-- Zone du graphique (ChartJS) -->
+            <div class="top-graphs">
+                <canvas id="topChart"></canvas>
+            </div>
+    
+            <!-- Mini-carte de navigation -->
+            <div class="mini-map" id="hud-map">
+                <!-- MapLibre sera initialisé ici -->
+            </div>
+        </section>
+    
+        <!-- Bandeau de titre pour la zone de graphiques -->
+        <section class="hud-graphs-label">
+            <span>GRAPHIQUES</span> <!-- libellé en français, on pourra traduire selon la langue choisie -->
+        </section>
+    
+        <!-- Section centrale : schéma véhicule + diagnostics -->
+        <section class="hud-middle">
+            <!-- Partie gauche : représentation du véhicule -->
+            <div class="vehicle-schematic placeholder" id="vehicle-schematic">
+                Schéma du véhicule <!-- texte temporaire -->
+            </div>
+    
+            <!-- Colonne de droite : scan + diagnostics -->
+            <div class="right-column">
+                <!-- Affichage type radar -->
+                <div class="scan" id="hud-scan">
+                    <canvas id="hud-scan-canvas" width="220" height="220"></canvas>
+                </div>
+    
+                <!-- Panneau diagnostics du haut -->
+                <div class="diagnostics placeholder" id="hud-diagnostics-top">
+                    Diagnostics – moteur / batterie / température
+                </div>
+    
+                <!-- Panneau diagnostics du bas -->
+                <div class="diagnostics placeholder" id="hud-diagnostics-bottom">
+                    Diagnostics – verrous / pression pneus / systèmes
+                </div>
+            </div>
+        </section>
+    
+        <!-- Barre du bas pour les statistiques -->
+        <footer class="hud-bottom-stats">
+            <canvas id="bottomChart"></canvas> <!-- ChartJS affichera les stats ici -->
+        </footer>
+    
+    </main>
+    
+    <!-- Librairies externes côté JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/animejs/3.2.1/anime.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://unpkg.com/maplibre-gl@3.6.1/dist/maplibre-gl.js"></script>
+    <script src="https://unpkg.com/tone@14.8.49/build/Tone.js"></script>
+    <script src="https://unpkg.com/zdog@1/dist/zdog.dist.min.js"></script>
+    
+    <!-- Scripts  -->
+    <script src="src/js/bootstrap.js"></script>
+    <script src="src/js/animejs.js"></script>
+    <script src="src/js/chartjs.js"></script>
+    <script src="src/js/maplibre.js"></script>
+    <script src="src/js/zdog.js"></script> <!-- modèle 3D / éléments Zdog -->
+    <script src="src/js/tonejs.js"></script> <!-- sons d’ambiance -->
+    <script src="src/js/vfx.js"></script> <!-- effets visuels supplémentaires -->
     
 </body>
 </html>
