@@ -1,51 +1,65 @@
 // src/js/chartjs.js
+import Chart from "https://esm.sh/chart.js/auto";
 
-document.addEventListener("DOMContentLoaded", () => {
-    if (typeof Chart === "undefined") return;
+// Grab the canvas safely
+const ctx = document.querySelector("#topChart")?.getContext("2d");
 
-    const topCtx = document.getElementById("topChart");
-    const bottomCtx = document.getElementById("bottomChart");
-
-    if (topCtx) {
-        new Chart(topCtx, {
-            type: "line",
-            data: {
-                labels: ["00", "01", "02", "03", "04", "05", "06"],
-                datasets: [{
-                    label: "Energy flow",
-                    data: [20, 35, 32, 50, 48, 60, 55],
-                    borderWidth: 2,
-                    fill: false
-                }]
-            },
-            options: {
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { ticks: { color: "#9aa0a6" }, grid: { display: false } },
-                    y: { ticks: { color: "#9aa0a6" }, grid: { color: "#1f2835" } }
+if (!ctx) {
+    console.warn("❌ topChart canvas not found");
+} else {
+    // Create the chart
+    let graphique = new Chart(ctx, {
+        type: "bar",
+        data: {
+            labels: [
+                "Engine Load",
+                "Battery Health",
+                "Oil Pressure",
+                "Turbo Boost",
+                "Coolant Temp",
+                "Fuel Mix",
+                "Brake Efficiency",
+                "Tire Grip",
+                "Suspension Stress"
+            ],
+            datasets: [
+                {
+                    label: "% de répondants",
+                    data: [49, 49, 42, 42, 37, 31, 31, 23, 22],
+                    backgroundColor: "rgba(85, 239, 239, 1)",
+                    borderWidth: 1,
+                    borderRadius: 4
+                }
+            ]
+        },
+        options: {
+            responsive: true,
+            maintainAspectRatio: false,
+            indexAxis: "y",
+            scales: {
+                x: {
+                    beginAtZero: true,
+                    ticks: {
+                        color: "#fff",
+                        callback: v => v + "%"
+                    },
+                    grid: { color: "rgba(255,255,255,0.1)" }
+                },
+                y: {
+                    ticks: { color: "#fff" },
+                    grid: { color: "rgba(255,255,255,0.1)" }
                 }
             }
-        });
-    }
+        }
+    });
 
-    if (bottomCtx) {
-        new Chart(bottomCtx, {
-            type: "bar",
-            data: {
-                labels: ["ENG", "BAT", "TEMP", "BRAKE", "TIRE"],
-                datasets: [{
-                    label: "System load",
-                    data: [80, 65, 45, 50, 70],
-                    borderWidth: 0
-                }]
-            },
-            options: {
-                plugins: { legend: { display: false } },
-                scales: {
-                    x: { ticks: { color: "#9aa0a6" }, grid: { display: false } },
-                    y: { ticks: { color: "#9aa0a6" }, grid: { color: "#1f2835" } }
-                }
+    // Auto-update every second with random data
+    setInterval(() => {
+        for (let ds of graphique.data.datasets) {
+            for (let i = 0; i < ds.data.length; i++) {
+                ds.data[i] = Math.round(Math.random() * 80 + 20);
             }
-        });
-    }
-});
+        }
+        graphique.update();
+    }, 1000);
+}

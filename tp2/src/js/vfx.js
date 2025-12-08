@@ -1,17 +1,14 @@
-// src/js/vfx.js
+import { VFX } from "vfx-js";
 
-document.addEventListener("DOMContentLoaded", () => {
-    const placeholders = document.querySelectorAll(".placeholder");
+const vfx = new VFX();
 
-    placeholders.forEach(el => {
-        el.addEventListener("mouseenter", () => {
-            el.style.boxShadow = "0 0 16px rgba(15, 240, 252, 0.4)";
-            el.style.borderColor = "#0ff0fc";
-        });
+// Sélectionne TOUS les éléments qui ont la classe "rgb"
+const elements = document.querySelectorAll(".rgb");
 
-        el.addEventListener("mouseleave", () => {
-            el.style.boxShadow = "none";
-            el.style.borderColor = "#1f2835";
-        });
-    });
+// Pour chacun, applique le shader rgbShift
+elements.forEach((el) => {
+  vfx.add(el, {
+    shader: "rgbShift",
+    overflow: 40
+  });
 });

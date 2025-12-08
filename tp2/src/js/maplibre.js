@@ -1,19 +1,15 @@
 // src/js/maplibre.js
+import maplibregl from "maplibre-gl";
 
-document.addEventListener("DOMContentLoaded", () => {
-    if (typeof maplibregl === "undefined") return;
-
-    const container = document.getElementById("hud-map");
-    if (!container) return;
-
-    const map = new maplibregl.Map({
-        container: container,
-        style: "https://demotiles.maplibre.org/style.json",
-        center: [-73.5673, 45.5017], // Montréal
-        zoom: 10
-    });
-
-    new maplibregl.Marker({ color: "#ff2f4b" })
-        .setLngLat([-73.5673, 45.5017])
-        .addTo(map);
+const map = new maplibregl.Map({
+  container: "hud-map",  // matches the HTML
+  style: "https://api.maptiler.com/maps/toner-v2/style.json?key=vi9DtA1TL0Ga3okiln2O",
+  center: [139.7003, 35.6595],
+  zoom: 17,
+  attributionControl: false
 });
+
+// Optionnel : un petit marqueur
+new maplibregl.Marker({ color: "#0065c4ff" })
+  .setLngLat([139.7003, 35.6595])
+  .addTo(map);

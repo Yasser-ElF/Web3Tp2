@@ -1,28 +1,35 @@
-// src/js/tonejs.js
+import * as Tone from "tone.js";
 
-document.addEventListener("DOMContentLoaded", () => {
-    if (typeof Tone === "undefined") return;
+let isPlaying = false; // état du son
 
-    const btn = document.getElementById("audio-toggle");
-    if (!btn) return;
+// un petit bip futuriste / synthé
+const synth = new Tone.Synth({
+  oscillator: { type: "sine" },
+  envelope: {
+    attack: 0.01,
+    decay: 0.2,
+    sustain: 0.1,
+    release: 0.3
+  }
+}).toDestination();
 
-    const synth = new Tone.PolySynth(Tone.Synth).toDestination();
-    let playing = false;
+// référence au bouton
+const button = document.getElementById("audio-toggle");
 
-    btn.addEventListener("click", async () => {
-        await Tone.start();
+if (button) {
+  button.addEventListener("click", async () => {
+    await Tone.start(); // obligatoire pour débloquer le son dans Chrome
 
-        if (!playing) {
-            // Petit accord pour faire "ambiance cockpit"
-            synth.triggerAttackRelease(["A3", "C4", "E4"], "2n");
-            playing = true;
-            btn.classList.add("btn-success");
-            btn.classList.remove("btn-outline-light");
-        } else {
-            synth.releaseAll();
-            playing = false;
-            btn.classList.remove("btn-success");
-            btn.classList.add("btn-outline-light");
-        }
-    });
-});
+    if (!isPlaying) {
+      // jouer un son court
+      synth.triggerAttackRelease("A4", "8n");
+      isPlaying = true;
+      button.textContent = "Audio ON"; //changer le nom du button de "Audio" a "Audio ON"
+    } else {
+      // jouer un son différent pour désactivation
+      synth.triggerAttackRelease("D3", "8n");
+      isPlaying = false;
+      button.textContent = "Audio"; //remetre le no "Audio"
+    }
+  });
+}

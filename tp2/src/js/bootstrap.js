@@ -1,10 +1,6 @@
-// src/js/bootstrap.js
+import * as bootstrap from "bootstrap";
 
-document.addEventListener("DOMContentLoaded", () => {
-    const tooltipTriggerList = [].slice.call(
-        document.querySelectorAll('[data-bs-toggle="tooltip"]')
-    );
-    tooltipTriggerList.forEach(el => {
-        new bootstrap.Tooltip(el);
-    });
+// active tous les tooltips bootstrap sur la page
+document.querySelectorAll('[data-bs-toggle="tooltip"]').forEach((el) => {
+  new bootstrap.Tooltip(el);
 });
