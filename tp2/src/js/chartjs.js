@@ -5,7 +5,7 @@ import Chart from "https://esm.sh/chart.js/auto";
 const ctx = document.querySelector("#topChart")?.getContext("2d");
 
 if (!ctx) {
-    console.warn("❌ topChart canvas not found");
+    console.warn(" topChart canvas not found");
 } else {
     // Create the chart
     let graphique = new Chart(ctx, {
